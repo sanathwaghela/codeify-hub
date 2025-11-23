@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: nginx-gateway               # name of the gateway
+  namespace: nginx-gateway          # namespace where gateway is deployed 
+spec:
+  gatewayClassName: nginx           # refering to gateway class name
+  listeners:                        # listeners configuration can add multiple listeners
+  - name: codeify-http                   # name of the listener
+    port: 80                        # port number for the listener
+    protocol: HTTP                  # protocol used by the listener
+    hostname: "*.codeify.me"        #  hostname for which listener is created
+    allowedRoutes:                  # allowed routes configuration
+      namespaces:
+        from: Selector              # allow routes from namespaces matching the selector
+        selector:
+          matchLabels:
+            gateway-access: "true"  # label selector for namespaces allowed to use this listener
+    # allowedRoutes:
+    #   namespaces:
+    #     from: All

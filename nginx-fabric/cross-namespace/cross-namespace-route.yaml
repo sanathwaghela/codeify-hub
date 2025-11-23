@@ -6,7 +6,7 @@ metadata:
 spec:
   parentRefs:
   - name: nginx-gateway                        ## refering gateway name
-    sectionName: codeify-https                 ## refering listener name
+    sectionName: codeify-http                 ## refering listener name
     namespace: nginx-gateway                   ## refering namespace where gateway is deployed
   hostnames:
   - "application.codeify.me"                   ## refering to hostname used by particular route
@@ -28,7 +28,7 @@ metadata:
 spec:
   parentRefs:
   - name: nginx-gateway                         ## refering gateway name
-    sectionName: codeify-https                 ## refering listener name
+    sectionName: codeify-http                  ## refering listener name
     namespace: nginx-gateway                   ## refering namespace where gateway is deployed
   hostnames:
   - "route-app.codeify.me"                     ## refering to hostname used by particular route
