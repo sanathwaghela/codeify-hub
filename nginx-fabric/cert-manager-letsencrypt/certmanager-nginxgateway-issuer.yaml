@@ -1,0 +1,29 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer # issuer or clusterissuer
+metadata:
+  name: letsencrypt-codeify # name of the issuer
+  namespace: nginx-gateway # namespace where issuer is created
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: sanathw55@gmail.com
+    # The ACME certificate profile
+    profile: tlsserver
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-codeify
+    # Enable the HTTP-01 challenge provider
+    solvers:
+      - http01: # work by verifying domain ownership via HTTP requests
+          gatewayHTTPRoute:
+            parentRefs:
+              - name: nginx-gateway        # refering gateway name
+                namespace: nginx-gateway # refering namespace where gateway is deployed
+                kind: Gateway            # optional, defaults to Gateway
+      - dns01: # work by verifying domain ownership via DNS records
+          digitalocean:  # using digitalocean as DNS provider work with other providers too like cloudflare, route53 etc
+            tokenSecretRef:
+              name: digitalocean-dns # refering secret name containing digitalocean token
+              key: access-token # refering key in secret containing digitalocean token

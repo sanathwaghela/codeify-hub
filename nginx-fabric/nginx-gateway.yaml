@@ -1,0 +1,38 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: nginx-gateway               # name of the gateway
+  namespace: nginx-gateway          # namespace where gateway is deployed
+  annotations:
+      cert-manager.io/issuer: letsencrypt-codeify # refering to cert-manager issuer 
+spec:
+  gatewayClassName: nginx           # refering to gateway class name
+  listeners:                        # listeners configuration can add multiple listeners
+  - name: codeify                   # name of the listener
+    port: 80                        # port number for the listener
+    protocol: HTTP                  # protocol used by the listener
+    hostname: "*.codeify.me"        #  hostname for which listener is created
+    allowedRoutes:                  # allowed routes configuration
+      namespaces:
+        from: Selector              # allow routes from namespaces matching the selector
+        selector:
+          matchLabels:
+            gateway-access: "true"  # label selector for namespaces allowed to use this listener
+    # allowedRoutes:
+    #   namespaces:
+    #     from: All
+  - name: codeify-https             # name of the listener for https
+    port: 443                       # port number for the listener
+    protocol: HTTPS                 # protocol used by the listener
+    hostname: "*.codeify.me"        #  hostname for which listener is created
+    allowedRoutes:                  # allowed routes configuration
+      namespaces:
+        from: Selector              # allow routes from namespaces matching the selector
+        selector:
+          matchLabels:
+            gateway-access: "true"  # label selector for namespaces allowed to use this listener
+    tls:
+      mode: Terminate               # https traffic is terminated at the gateway inside the cluster traffic between gateway and backend is unencrypted
+      certificateRefs:
+        - name: codeify-me-tls  # refering to certificate name created by cert-manager
+          kind: Secret          # kind

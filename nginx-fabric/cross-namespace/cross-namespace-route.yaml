@@ -1,0 +1,43 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: application-route                     ## refering route name
+  namespace: application                      ## refering namespace where route is deployed
+spec:
+  parentRefs:
+  - name: nginx-gateway                        ## refering gateway name
+    sectionName: codeify-https                 ## refering listener name
+    namespace: nginx-gateway                   ## refering namespace where gateway is deployed
+  hostnames:
+  - "application.codeify.me"                   ## refering to hostname used by particular route
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix                       ## path type can be Exact, PathPrefix, RegularExpression
+        value: /
+    backendRefs:
+    - name: nginx-server                        ## refering service name
+      namespace: application                    ## refering namespace where service is deployed
+      port: 80                                  ## refering service port
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: route-app                               ## refering route name
+  namespace: route-app                          ## refering namespace where route is deployed
+spec:
+  parentRefs:
+  - name: nginx-gateway                         ## refering gateway name
+    sectionName: codeify-https                 ## refering listener name
+    namespace: nginx-gateway                   ## refering namespace where gateway is deployed
+  hostnames:
+  - "route-app.codeify.me"                     ## refering to hostname used by particular route
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix                      ## path type can be Exact, PathPrefix, RegularExpression
+        value: /
+    backendRefs:
+    - name: route-app                               ## refering service name
+      namespace: route-app                          ## refering namespace where service is deployed
+      port: 80                                     ## refering service port
