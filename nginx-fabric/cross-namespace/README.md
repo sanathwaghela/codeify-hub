@@ -185,7 +185,7 @@ kubectl apply -f nginx-fabric/deployment-service-file/deployment-service.yaml
 kubectl apply -f nginx-fabric/deployment-service-file/deploy+service-2.yaml
 
 # 3. Deploy Gateway (if not already)
-kubectl apply -f nginx-fabric/nginx-gateway.yaml
+kubectl apply -f nginx-fabric/cross-namespace/nginx-gateway.yaml
 
 # 4. Create cross-namespace routes
 kubectl apply -f nginx-fabric/cross-namespace/cross-namespace-route.yaml
